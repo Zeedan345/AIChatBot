@@ -11,7 +11,8 @@ from sentence_transformers.util import semantic_search
 model_id = "sentence-transformers/all-MiniLM-L6-v2"
 hf_token = "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"
 
-faqs_embeddings = datasets.load_dataset('Zarcend/testDataSet')
+#Following can be used if the dataset is online
+#faqs_embeddings = datasets.load_dataset('Zarcend/testDataSet')
 
 api_url = f"https://api-inference.huggingface.co/pipeline/feature-extraction/{model_id}"
 headers = {"Authorization": f"Bearer {hf_token}"}
@@ -37,7 +38,7 @@ texts = ["How do I get a replacement Medicare card?",
 output = query(texts)
 embeddings = pd.DataFrame(output)
 
-dataset_embeddings = torch.from_numpy(faqs_embeddings["train"].to_pandas().to_numpy()).to(torch.float)
+dataset_embeddings = torch.from_numpy(embeddings.to_numpy()).to(torch.float)
 
 question = ["How can Medicare"]
 output = query(question)
