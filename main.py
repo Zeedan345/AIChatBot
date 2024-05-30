@@ -1,3 +1,7 @@
+#Imports for flask and connection to javascirpt
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from transformers import pipeline
 #import faiss
 from langchain_community.embeddings import HuggingFaceEmbeddings
 #from langchain.vectorstores import faiss
@@ -7,7 +11,7 @@ import torch
 import datasets
 from sentence_transformers.util import semantic_search
 
-
+#Code for Model Starts here
 model_id = "sentence-transformers/all-MiniLM-L6-v2"
 hf_token = "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"
 
@@ -40,17 +44,43 @@ embeddings = pd.DataFrame(output)
 
 dataset_embeddings = torch.from_numpy(embeddings.to_numpy()).to(torch.float)
 
-question = ["How can Medicare"]
-output = query(question)
 
-query_embeddings = torch.FloatTensor(output)
+data = {"Actors": ["Brad Pitt", "Leonardo Di Caprio", "George Clooney"], "Number of movies": ["87", "53", "69"]}
+table = pd.DataFrame.from_dict(data)
+question = "how many movies does Leonardo Di Caprio have?"
 
-hits = semantic_search(query_embeddings, dataset_embeddings, top_k=5)
+tqa = pipeline(task="table-question-answering", model="google/tapas-large-finetuned-wtq")
 
-print([texts[hits[0][i]['corpus_id']] for i in range(len(hits[0]))])
+print(tqa(table=table, query=question)['cells'][0])
+
+def getchat(input):
+    question = [input]
+    output = query(question)
+
+    query_embeddings = torch.FloatTensor(output)
+
+    hits = semantic_search(query_embeddings, dataset_embeddings, top_k=1)
+    top_k_texts = [texts[hit['corpus_id']] for hit in hits[0]]
+    #first_result = top_k_texts[0]
+    return top_k_texts
+
+
 
 
 
 #embeddings.to_csv("embeddings.csv", index=False)
 #print(embeddings)
 
+#Connecting to Front end
+# app = Flask(__name__)
+# CORS(app)  # Enable CORS for all routes
+
+# @app.route('/process_data', methods=['POST'])
+# def process_data():
+#     data = request.json  # Extract JSON data sent from JS
+#     input = data['message']
+#     result = {"response": getchat(input)}
+#     return jsonify(result)
+
+# if __name__ == '__main__':
+#     app.run(debug=True)  # Run the Flask app
