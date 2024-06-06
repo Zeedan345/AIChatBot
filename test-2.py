@@ -33,5 +33,5 @@ print(tokenizer.batch_decode(outputs, skip_special_tokens=True))
 
 
 
-# f.close()
+f.close()
 
