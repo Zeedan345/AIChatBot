@@ -11,14 +11,14 @@ tokenized_context = torch.load('tokenized_context.pt')
 
 # Define the model name
 model_name = "deepset/roberta-base-squad2"
-model = AutoModelForQuestionAnswering.from_pretrained(model_name, device_map = 'cuda')
+model = AutoModelForQuestionAnswering.from_pretrained(model_name)
 
 # Initialize the pipeline with the loaded model and tokenizer
 nlp = pipeline('question-answering', model=model, tokenizer=AutoTokenizer.from_pretrained(model_name))
 
 # Define the QA input with the question and tokenized context
 QA_input = {
-    'question': 'What is the best provider in Starkville',
+    'question': 'What is the best provider in City Starkville',
     'context': tokenized_context
 }
 
