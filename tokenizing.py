@@ -18,6 +18,22 @@ with open('data_compact.json', encoding="utf8") as f:
 #         elif value is None:
 #             entry[key] = "Null"
 
+
+def process_value(value):
+    if value == 0:
+        return "False"
+    elif value == 1:
+        return "True"
+    elif isinstance(value, (int, float)):
+        return str(value)
+    else:
+        return value
+
+# Apply the function to each element in the DataFrame
+df_processed = df.applymap(process_value)
+
+
+
 # Concatenate context string
 context = ''
 context += ' '.join(json.dumps(entry) for entry in data)
