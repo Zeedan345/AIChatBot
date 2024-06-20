@@ -189,5 +189,5 @@ for epoch in range(10):  # loop over the dataset multiple times
 
 
 
-model.save_pretrained("AFFIRM-fine-tuned-tapas-25")
-tokenizer.save_pretrained("AFFIRM-fine-tuned-tapas-25")
+model.save_pretrained("AFFIRM-fine-tuned-tapas-25", safe_serialization=False)
+tokenizer.save_pretrained("AFFIRM-fine-tuned-tapas-25", safe_serialization=False)
